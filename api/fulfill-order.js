@@ -79,8 +79,8 @@ async function fulfillToCJ(session) {
   const name = ship.name || (session.customer_details && session.customer_details.name) || '';
   const phone = (session.customer_details && session.customer_details.phone) || '';
 
-  const order = {
-    orderNumber: session.id, // unique ref -> lets CJ dedupe if Stripe retries
+const order = {
+    orderNumber: session.id,
     shippingCustomerName: name,
     shippingPhone: phone,
     shippingCountryCode: addr.country || '',
@@ -90,6 +90,7 @@ async function fulfillToCJ(session) {
     shippingZip: addr.postal_code || '',
     remark: 'Lumen & Paper order',
     fromCountryCode: 'CN',
+    logisticName: 'CJPacket Ordinary',
     products,
   };
 
@@ -145,4 +146,3 @@ async function handler(req, res) {
 module.exports = handler;
 // Disable Vercel's automatic body parsing so we can verify the raw Stripe signature.
 module.exports.config = { api: { bodyParser: false } };
-
