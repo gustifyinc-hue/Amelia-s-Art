@@ -1,0 +1,13 @@
+{
+  "name": "paper-lamp-store",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Handmade paper-cut shadow lamp store with Stripe Checkout + CJ Dropshipping auto-fulfillment",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "stripe": "^16.12.0"
+  }
+}

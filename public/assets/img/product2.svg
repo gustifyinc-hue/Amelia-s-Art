@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-label="Gradient paper-cut shadow lamp (placeholder image)">
+  <defs>
+    <linearGradient id="g2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffd9a0"/>
+      <stop offset="40%" stop-color="#e08d5b"/>
+      <stop offset="100%" stop-color="#6b4a8a"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="600" fill="#2d3536"/>
+  <rect x="140" y="80" width="320" height="440" rx="160" fill="url(#g2)"/>
+  <rect x="140" y="80" width="320" height="440" rx="160" fill="none" stroke="#1f1c18" stroke-width="10"/>
+  <g fill="#1f1c18">
+    <path d="M170 520 V330 q130 -120 260 0 V520 Z" opacity="0.85"/>
+    <path d="M210 520 V380 q90 -70 180 0 V520 Z"/>
+    <circle cx="300" cy="220" r="40" opacity="0.8"/>
+  </g>
+</svg>

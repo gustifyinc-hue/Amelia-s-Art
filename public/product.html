@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lumen &amp; Paper — lamp</title>
+  <meta name="description" content="Choose your handmade paper-cut shadow lamp and add it to your cart." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="/index.html">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.2 1 2.5h6c0-1.3.3-1.8 1-2.5A6 6 0 0 0 12 3Z"/></svg>
+        Lumen &amp; Paper
+      </a>
+      <nav class="nav">
+        <a href="index.html#shop">Shop</a>
+        <a href="index.html#story">My story</a>
+        <a class="cart-link" href="cart.html">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+          Cart <span class="cart-count" data-cart-count style="display:none">0</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <p style="margin:18px 0 0"><a href="index.html#shop" style="text-decoration:none;font-weight:700">&larr; All lamps</a></p>
+
+    <div class="product-layout" id="product-root" hidden>
+      <div class="product-gallery"><img id="p-image" src="" alt="" /></div>
+      <div class="product-info">
+        <h1 id="p-name"></h1>
+        <div class="price-lg" id="p-price"></div>
+        <p class="desc" id="p-desc"></p>
+
+        <div class="picker" id="variant-picker">
+          <label id="variant-label">Choose your design</label>
+          <div class="choice-row" id="variant-choices" role="group" aria-labelledby="variant-label"></div>
+        </div>
+
+        <div class="picker">
+          <label for="qty-input">Quantity</label>
+          <div class="qty">
+            <button type="button" id="qty-minus" aria-label="Decrease quantity">&minus;</button>
+            <input id="qty-input" type="number" min="1" value="1" inputmode="numeric" aria-label="Quantity" />
+            <button type="button" id="qty-plus" aria-label="Increase quantity">+</button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-block" id="add-btn">Add to cart</button>
+        <p class="added-msg" id="added-msg" role="status" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <div id="not-found" class="cart-empty" hidden>
+      <h2>Hmm, I couldn't find that lamp.</h2>
+      <p><a href="index.html#shop">Back to all lamps &rarr;</a></p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>&copy; <span id="year"></span> Lumen &amp; Paper · made by hand</span>
+      <span><a href="cart.html">Cart</a> · <a href="index.html#story">My story</a></span>
+    </div>
+  </footer>
+
+  <script src="assets/js/store.js"></script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const params = new URLSearchParams(location.search);
+    const product = findProduct(params.get('id'));
+    const root = document.getElementById('product-root');
+    const notFound = document.getElementById('not-found');
+
+    if (!product) {
+      notFound.hidden = false;
+    } else {
+      root.hidden = false;
+      let selectedVariant = product.variants[0].id;
+
+      document.getElementById('p-image').src = product.image;
+      document.getElementById('p-image').alt = product.name;
+      document.getElementById('p-name').textContent = product.name;
+      document.getElementById('p-price').textContent = formatPrice(product.priceCents);
+      document.getElementById('p-desc').textContent = product.longDesc || product.blurb;
+
+      // Single-variant products don't need a picker.
+      const picker = document.getElementById('variant-picker');
+      if (product.variants.length <= 1) {
+        picker.hidden = true;
+      } else {
+        const choices = document.getElementById('variant-choices');
+        choices.innerHTML = product.variants.map((v, i) => `
+          <button type="button" class="choice" data-variant="${v.id}" aria-pressed="${i === 0}">${v.name}</button>
+        `).join('');
+        choices.addEventListener('click', (e) => {
+          const btn = e.target.closest('.choice');
+          if (!btn) return;
+          selectedVariant = btn.dataset.variant;
+          choices.querySelectorAll('.choice').forEach((c) =>
+            c.setAttribute('aria-pressed', c === btn ? 'true' : 'false'));
+        });
+      }
+
+      const qtyInput = document.getElementById('qty-input');
+      document.getElementById('qty-minus').addEventListener('click', () => {
+        qtyInput.value = Math.max(1, (parseInt(qtyInput.value, 10) || 1) - 1);
+      });
+      document.getElementById('qty-plus').addEventListener('click', () => {
+        qtyInput.value = (parseInt(qtyInput.value, 10) || 1) + 1;
+      });
+
+      const msg = document.getElementById('added-msg');
+      document.getElementById('add-btn').addEventListener('click', () => {
+        const qty = Math.max(1, parseInt(qtyInput.value, 10) || 1);
+        addToCart(product.id, selectedVariant, qty);
+        const vName = findVariant(product, selectedVariant).name;
+        msg.textContent = `Added ${qty} × ${vName} to your cart ♥`;
+      });
+    }
+  </script>
+</body>
+</html>
