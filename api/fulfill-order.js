@@ -84,6 +84,7 @@ const order = {
     shippingCustomerName: name,
     shippingPhone: phone,
     shippingCountryCode: addr.country || '',
+    shippingCountry: addr.country || '',
     shippingProvince: addr.state || '',
     shippingCity: addr.city || '',
     shippingAddress: [addr.line1, addr.line2].filter(Boolean).join(', '),
