@@ -1,19 +1,23 @@
 // POST /api/fulfill-order  — Stripe webhook endpoint that drives auto-fulfillment.
-//
-// Flow:
-//   1. Verify the Stripe signature (raw body) so we only trust real Stripe events.
-//   2. On `checkout.session.completed` + paid, read the compact cart from session.metadata.
-//   3. Map our productId/variantId -> CJ product/variant IDs via the server catalog.
-//   4. Authenticate to CJ, place the dropship order with the customer's shipping address.
-//   5. Log the CJ order id (or the error) for reference.
-//
-// IMPORTANT: this needs the RAW request body, so the default body parser is disabled below.
-
 const Stripe = require('stripe');
 const { resolveLine } = require('../lib/catalog');
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const CJ_BASE = 'https://developers.cjdropshipping.com/api2.0/v1';
+
+const COUNTRY_NAMES = {
+  AF:'Afghanistan',AR:'Argentina',AU:'Australia',AT:'Austria',BE:'Belgium',BR:'Brazil',
+  CA:'Canada',CL:'Chile',CN:'China',CO:'Colombia',HR:'Croatia',CZ:'Czech Republic',
+  DK:'Denmark',EG:'Egypt',FI:'Finland',FR:'France',DE:'Germany',GR:'Greece',
+  HK:'Hong Kong',HU:'Hungary',IN:'India',ID:'Indonesia',IE:'Ireland',IL:'Israel',
+  IT:'Italy',JP:'Japan',JO:'Jordan',KZ:'Kazakhstan',KE:'Kenya',KW:'Kuwait',
+  LT:'Lithuania',LU:'Luxembourg',MY:'Malaysia',MX:'Mexico',MA:'Morocco',NL:'Netherlands',
+  NZ:'New Zealand',NG:'Nigeria',NO:'Norway',PK:'Pakistan',PE:'Peru',PH:'Philippines',
+  PL:'Poland',PT:'Portugal',QA:'Qatar',RO:'Romania',SA:'Saudi Arabia',SG:'Singapore',
+  ZA:'South Africa',KR:'South Korea',ES:'Spain',SE:'Sweden',CH:'Switzerland',
+  TW:'Taiwan',TH:'Thailand',TR:'Turkey',UA:'Ukraine',AE:'United Arab Emirates',
+  GB:'United Kingdom',US:'United States',VN:'Vietnam',
+};
 
 async function readRawBody(req) {
   const chunks = [];
@@ -50,7 +54,6 @@ async function cjCreateOrder(token, order) {
 }
 
 async function fulfillToCJ(session) {
-  // Compact cart we stored at checkout time: [{ p, v, q }]
   let cart = [];
   try {
     cart = JSON.parse(session.metadata && session.metadata.cart ? session.metadata.cart : '[]');
@@ -69,7 +72,6 @@ async function fulfillToCJ(session) {
   }
   if (products.length === 0) throw new Error('No fulfillable line items in session.');
 
-  // Shipping details — handle the few shapes Stripe has used across API versions.
   const ship =
     session.shipping_details ||
     (session.collected_information && session.collected_information.shipping_details) ||
@@ -79,12 +81,15 @@ async function fulfillToCJ(session) {
   const name = ship.name || (session.customer_details && session.customer_details.name) || '';
   const phone = (session.customer_details && session.customer_details.phone) || '';
 
-const order = {
+  const countryCode = addr.country || '';
+  const countryName = COUNTRY_NAMES[countryCode] || countryCode;
+
+  const order = {
     orderNumber: session.id,
     shippingCustomerName: name,
     shippingPhone: phone,
-    shippingCountryCode: addr.country || '',
-    shippingCountry: addr.country || '',
+    shippingCountryCode: countryCode,
+    shippingCountry: countryName,
     shippingProvince: addr.state || '',
     shippingCity: addr.city || '',
     shippingAddress: [addr.line1, addr.line2].filter(Boolean).join(', '),
@@ -115,7 +120,6 @@ async function handler(req, res) {
     const sig = req.headers['stripe-signature'];
     event = stripe.webhooks.constructEvent(raw, sig, process.env.STRIPE_WEBHOOK_SECRET);
   } catch (err) {
-    // Bad/missing signature -> reject loudly. This blocks forged "order placed" calls.
     console.error('fulfill-order: signature verification failed:', err.message);
     res.status(400).json({ error: `Webhook signature verification failed: ${err.message}` });
     return;
@@ -137,13 +141,10 @@ async function handler(req, res) {
     const cjOrderId = await fulfillToCJ(session);
     res.status(200).json({ received: true, cjOrderId });
   } catch (err) {
-    // Payment already succeeded — do NOT make Stripe retry forever. Acknowledge receipt
-    // and log loudly so the order can be placed manually in the CJ dashboard if needed.
     console.error(`fulfill-order: CJ fulfillment FAILED for Stripe session ${session.id}:`, err.message);
     res.status(200).json({ received: true, fulfillmentError: err.message });
   }
 }
 
 module.exports = handler;
-// Disable Vercel's automatic body parsing so we can verify the raw Stripe signature.
 module.exports.config = { api: { bodyParser: false } };
