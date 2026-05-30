@@ -31,7 +31,7 @@ async function cjAuth() {
   const res = await fetch(`${CJ_BASE}/authentication/getAccessToken`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: process.env.CJ_EMAIL, password: process.env.CJ_API_KEY }),
+    body: JSON.stringify({ apiKey: process.env.CJ_API_KEY }),
   });
   const data = await res.json();
   if (!data || !data.data || !data.data.accessToken) {
