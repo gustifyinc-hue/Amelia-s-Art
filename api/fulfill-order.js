@@ -145,3 +145,4 @@ async function handler(req, res) {
 module.exports = handler;
 // Disable Vercel's automatic body parsing so we can verify the raw Stripe signature.
 module.exports.config = { api: { bodyParser: false } };
+
