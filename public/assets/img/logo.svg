@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" role="img" aria-label="Amelia's Art logo">
+  <defs>
+    <radialGradient id="lampGlow" cx="50%" cy="62%" r="62%">
+      <stop offset="0%" stop-color="#ffe6ad"/>
+      <stop offset="58%" stop-color="#e9b949"/>
+      <stop offset="100%" stop-color="#e08d5b"/>
+    </radialGradient>
+  </defs>
+  <!-- warm light spilling out below the lamp -->
+  <g stroke="#e9b949" stroke-width="1.8" stroke-linecap="round">
+    <line x1="20" y1="35" x2="20" y2="39"/>
+    <line x1="11" y1="34" x2="8" y2="38"/>
+    <line x1="29" y1="34" x2="32" y2="38"/>
+  </g>
+  <!-- lamp frame -->
+  <rect x="5.5" y="4.5" width="29" height="29" rx="4.5" fill="#fffaf2" stroke="#2b2b2b" stroke-width="2.4"/>
+  <!-- glowing scene inside -->
+  <path d="M10 29 V18.5 A10 10 0 0 1 30 18.5 V29 Z" fill="url(#lampGlow)"/>
+  <!-- crescent moon -->
+  <circle cx="26" cy="13.5" r="2" fill="#2b2b2b"/>
+  <!-- little bird -->
+  <path d="M12.6 12 q1.7 -1.8 3.4 0 q1.7 -1.8 3.4 0" fill="none" stroke="#2b2b2b" stroke-width="1.4" stroke-linecap="round"/>
+  <!-- ground / hill silhouette -->
+  <path d="M10 29 V25.4 Q15 23.2 20 24.8 T30 25.4 V29 Z" fill="#2b2b2b"/>
+  <!-- paper-cut tree -->
+  <g stroke="#2b2b2b" stroke-width="1.6" stroke-linecap="round" fill="none">
+    <path d="M16.4 26 V18"/>
+    <path d="M16.4 20.4 l-2.6 -2.4 M16.4 22 l2.6 -2.4 M16.4 18.8 l2.2 2 M16.4 23.4 l-2.2 1.9"/>
+  </g>
+</svg>

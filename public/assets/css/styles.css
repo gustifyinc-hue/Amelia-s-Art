@@ -65,6 +65,7 @@ a { color: var(--terracotta-dark); }
   text-decoration: none; color: var(--ink); display: flex; align-items: center; gap: 8px;
 }
 .brand svg { color: var(--glow); }
+.brand-logo { width: 34px; height: 34px; display: block; flex: none; }
 .nav { display: flex; align-items: center; gap: 22px; }
 .nav a { text-decoration: none; color: var(--ink-soft); font-weight: 600; }
 .nav a:hover { color: var(--ink); }
@@ -97,6 +98,8 @@ a { color: var(--terracotta-dark); }
 .btn-primary:hover { background: var(--terracotta-dark); }
 .btn-dark { background: var(--ink); color: var(--cream); }
 .btn-dark:hover { background: #000; }
+.btn-glow { background: var(--glow); color: var(--ink); }
+.btn-glow:hover { background: #d9a72e; }
 .btn-ghost { background: transparent; color: var(--ink); border: 2px solid var(--ink); }
 .btn-ghost:hover { background: var(--ink); color: var(--cream); }
 .btn[disabled] { opacity: 0.6; cursor: not-allowed; }
@@ -178,7 +181,9 @@ section.block { padding: 46px 0; }
 .qty input { width: 48px; height: 44px; border: none; text-align: center; font-size: 1rem; font-family: inherit; -moz-appearance: textfield; }
 .qty input::-webkit-outer-spin-button, .qty input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
+.buy-actions { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
 .added-msg { color: var(--night); font-weight: 700; margin-top: 12px; min-height: 1.4em; }
+.checkout-err { color: #c0392b; font-weight: 700; margin-top: 8px; min-height: 1.2em; }
 
 /* ---------- Cart ---------- */
 .cart-list { display: flex; flex-direction: column; gap: 14px; margin: 24px 0; }
