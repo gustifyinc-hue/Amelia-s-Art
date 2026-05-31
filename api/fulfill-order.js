@@ -94,7 +94,7 @@ async function fulfillToCJ(session) {
     shippingCity: addr.city || '',
     shippingAddress: [addr.line1, addr.line2].filter(Boolean).join(', '),
     shippingZip: addr.postal_code || '',
-    remark: 'Lumen & Paper order',
+    remark: "Amelia's Art order",
     fromCountryCode: 'CN',
     logisticName: 'CJPacket Ordinary',
     products,

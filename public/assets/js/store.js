@@ -7,26 +7,26 @@ const CATALOG = [
     id: 'carving-lamp',
     name: 'Creative 3D Hollow Paper-Cut Light & Shadow Carving Lamp',
     priceCents: 3499,
-    image: 'assets/img/product1.svg',
+    image: 'assets/img/carving-a.png',
     blurb: 'A hand-finished layered paper-cut scene that throws a soft glowing shadow when lit. Warm LED, USB powered.',
     longDesc:
       "Each lamp is layered, cut, and finished by hand so the light catches every edge of the scene. Switch it on and the room fills with a warm, storybook glow — perfect on a shelf, desk, or bedside table. USB powered, low-heat LED, runs all night.",
     variants: [
-      { id: 'carving-a', name: 'Design A' },
-      { id: 'carving-b', name: 'Design B' },
-      { id: 'carving-c', name: 'Design C' },
+      { id: 'carving-a', name: 'Fairy Garden', image: 'assets/img/carving-a.png' },
+      { id: 'carving-b', name: 'Starry Astronomer', image: 'assets/img/carving-b.png' },
+      { id: 'carving-c', name: 'Paris Nights', image: 'assets/img/carving-c.png' },
     ],
   },
   {
     id: 'gradient-lamp',
     name: 'Light & Shadow Paper Carving Lamp',
     priceCents: 3499,
-    image: 'assets/img/product2.svg',
+    image: 'assets/img/gradient.png',
     blurb: 'A warm gradient USB lamp that layers cut-paper depth into a quiet ambient glow.',
     longDesc:
       "My quieter piece — a smooth gradient glow behind layered paper cuts. It melts into the background of a room and just makes everything feel a little cozier. USB powered with a soft-touch switch.",
     variants: [
-      { id: 'gradient-default', name: 'Gradient (USB)' },
+      { id: 'gradient-default', name: 'Gradient (USB)', image: 'assets/img/gradient.png' },
     ],
   },
 ];
